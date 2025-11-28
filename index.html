@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>第2R 恵比寿記念（G3）｜馬券投票ページ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@400;600;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      /* Modern Palette */
+      --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #f4f7f6 100%);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(255, 255, 255, 0.5);
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+
+      --ink: #1e293b;
+      --muted: #64748b;
+      --primary: #0f766e;
+      /* Teal-ish for wedding vibe */
+      --primary-dark: #0d5f58;
+      --accent: #d97706;
+      /* Gold-ish */
+      --focus-ring: rgba(15, 118, 110, 0.3);
+
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-gradient);
+      color: var(--ink);
+      font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    p.lead {
+      color: var(--muted);
+      margin: 0 0 32px;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media(min-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .full-width {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    input,
+    select {
+      width: 100%;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 16px;
+      font-family: inherit;
+      transition: all 0.2s;
+      appearance: none;
+    }
+
+    /* Custom arrow for select */
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 6px;
+      background-color: var(--muted);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      pointer-events: none;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--focus-ring);
+    }
+
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.2);
+      min-width: 120px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 8px -1px rgba(15, 118, 110, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border: 2px solid #e2e8f0;
+      color: var(--muted);
+      box-shadow: none;
+    }
+
+    .btn.ghost:hover {
+      border-color: var(--muted);
+      color: var(--ink);
+      background: #f8fafc;
+    }
+
+    .btn.accent {
+      background: linear-gradient(135deg, var(--accent) 0%, #b45309 100%);
+      box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.2);
+    }
+
+    .btn.accent:hover {
+      box-shadow: 0 6px 8px -1px rgba(217, 119, 6, 0.3);
+    }
+
+    .tips {
+      font-size: 13px;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 100%;
+      display: block;
+      height: auto;
+      border-radius: 0;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--ink);
+    }
+  </style>
+  <!-- 任意：プリロード（同一オリジンの固定ベース画像） -->
+  <link rel="preload" as="image" href="img/test.png">
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>第2R 恵比寿記念（G3）<br>馬券投票ページ</h1>
+    <p class="lead">
+      第2問<br>
+      新郎がかわいいと言うと 新婦が嫉妬する女性芸能人は？<br>
+      ①吉岡里帆（ユーアールデアール）<br>
+      ②幾田りら（イクラ）<br>
+      ③ラランドサーヤ（ラランドサーヤ）<br>
+      ④中条あやみ（ポーリン）<br>
+      ⑤あの（アノ）<br>
+      ⑥山田杏奈（ゴールデンアシリパ）<br>
+      ⑦多部未華子（トンジョオージー）<br>
+    </p>
+
+    <div class="card">
+      <form id="quizForm" onsubmit="return false;" class="form-grid">
+        <div class="input-group full-width">
+          <label>ニックネーム</label>
+          <input id="nickname" placeholder="例: はらそ" />
+        </div>
+        <div class="input-group">
+          <label>1位 予想</label>
+          <div class="select-wrapper">
+            <select id="pick1" required>
+              <option value="">選択してください</option>
+              <option>1&nbsp;&nbsp;&nbsp;&nbsp;ユーアールデアール</option>
+              <option>2&nbsp;&nbsp;&nbsp;&nbsp;イクラ</option>
+              <option>3&nbsp;&nbsp;&nbsp;&nbsp;ラランドサーヤ</option>
+              <option>4&nbsp;&nbsp;&nbsp;&nbsp;ポーリン</option>
+              <option>5&nbsp;&nbsp;&nbsp;&nbsp;アノ</option>
+              <option>6&nbsp;&nbsp;&nbsp;&nbsp;ゴールデンアシリパ</option>
+              <option>7&nbsp;&nbsp;&nbsp;&nbsp;トンジョオージー</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>2位 予想</label>
+          <div class="select-wrapper">
+            <select id="pick2" required>
+              <option value="">選択してください</option>
+              <option>1&nbsp;&nbsp;&nbsp;&nbsp;ユーアールデアール</option>
+              <option>2&nbsp;&nbsp;&nbsp;&nbsp;イクラ</option>
+              <option>3&nbsp;&nbsp;&nbsp;&nbsp;ラランドサーヤ</option>
+              <option>4&nbsp;&nbsp;&nbsp;&nbsp;ポーリン</option>
+              <option>5&nbsp;&nbsp;&nbsp;&nbsp;アノ</option>
+              <option>6&nbsp;&nbsp;&nbsp;&nbsp;ゴールデンアシリパ</option>
+              <option>7&nbsp;&nbsp;&nbsp;&nbsp;トンジョオージー</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>3位 予想</label>
+          <div class="select-wrapper">
+            <select id="pick3">
+              <option value="">選択してください</option>
+              <option>1&nbsp;&nbsp;&nbsp;&nbsp;ユーアールデアール</option>
+              <option>2&nbsp;&nbsp;&nbsp;&nbsp;イクラ</option>
+              <option>3&nbsp;&nbsp;&nbsp;&nbsp;ラランドサーヤ</option>
+              <option>4&nbsp;&nbsp;&nbsp;&nbsp;ポーリン</option>
+              <option>5&nbsp;&nbsp;&nbsp;&nbsp;アノ</option>
+              <option>6&nbsp;&nbsp;&nbsp;&nbsp;ゴールデンアシリパ</option>
+              <option>7&nbsp;&nbsp;&nbsp;&nbsp;トンジョオージー</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions full-width">
+          <button class="btn" id="submitBtn">馬券発行</button>
+          <!-- 画像保存ボタン削除 -->
+          <button id="copyBtn" type="button" class="btn ghost">画像をコピー</button>
+          <span id="status" class="tips"></span>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>馬券プレビュー</h3>
+      <canvas id="ticket" width="850" height="530" aria-label="馬券"></canvas>
+    </div>
+
+    <div style="text-align: right; margin-bottom: 40px;">
+      <button id="nextBtn" class="btn accent">第3問はこちら</button>
+    </div>
+  </div>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const canvas = $('#ticket');
+    const ctx = canvas.getContext('2d');
+
+    // 固定ベース画像の設定
+    const BASE_IMAGE_URL = 'img/test.png'; // リポジトリ内の相対パス
+    const BASE_FIT = 'cover';              // 'cover' or 'contain'
+
+    // 明るいパレット
+    const theme = { bg: '#f7fbff', panel: '#ffffff', ink: '#0f172a', sub: '#475569', accent: '#16a34a', line: '#e2e8f0', subtle: '#f1f5f9', race: '#0ea5e9' };
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const formatTs = (d) => `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    const trunc = (s, n) => !s ? s : (s.length > n ? s.slice(0, n - 1) + '…' : s);
+
+    let baseImg = null; // キャッシュ
+
+    function loadImage(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        // 同一オリジン想定（GitHub Pages/Netlifyなど）。CORS不要。
+        img.onload = () => resolve(img);
+        img.onerror = (e) => reject(e);
+        img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(); // キャッシュバイパス
+      });
+    }
+
+    function drawFittedImage(img, fit) {
+      const W = canvas.width, H = canvas.height;
+      const ir = img.width / img.height; const cr = W / H;
+      let dw, dh, dx, dy;
+      if (fit === 'contain') {
+        const ratio = cr > ir ? H / img.height : W / img.width;
+        dw = Math.round(img.width * ratio); dh = Math.round(img.height * ratio);
+        dx = Math.round((W - dw) / 2); dy = Math.round((H - dh) / 2);
+      } else { // cover
+        const ratio = cr > ir ? W / img.width : H / img.height;
+        dw = Math.round(img.width * ratio); dh = Math.round(img.height * ratio);
+        dx = Math.round((W - dw) / 2); dy = Math.round((H - dh) / 2);
+      }
+      ctx.drawImage(img, dx, dy, dw, dh);
+    }
+
+    function lightBand(x, y, w, h) {
+      const g = ctx.createLinearGradient(x, y, x + w, y);
+      g.addColorStop(0, '#e0f2fe'); g.addColorStop(0.55, '#bae6fd'); g.addColorStop(1, '#bbf7d0');
+      ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    }
+
+    function roundRect(x, y, w, h, r, fill = true) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      if (fill) ctx.fill();
+      ctx.strokeStyle = theme.line; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    function labelText(text, x, y, color) { ctx.fillStyle = color || theme.ink; ctx.fillText(text, x, y); }
+    function blockTitle(text, x, y) { ctx.save(); ctx.shadowColor = 'rgba(255,255,255,0.8)'; ctx.shadowBlur = 6; ctx.fillStyle = theme.ink; ctx.fillText(text, x, y); ctx.restore(); }
+
+    async function ensureBase() {
+      if (baseImg) return baseImg;
+      try { baseImg = await loadImage(BASE_IMAGE_URL); }
+      catch (e) { console.warn('ベース画像読み込み失敗', e); baseImg = null; }
+      return baseImg;
+    }
+
+    async function drawTicket(data) {
+      const W = canvas.width, H = canvas.height;
+
+      // 背景（固定ベース or フォールバック）
+      ctx.fillStyle = theme.bg; ctx.fillRect(0, 0, W, H);
+      const img = await ensureBase();
+      if (img) { drawFittedImage(img, BASE_FIT); }
+      else { // フォールバック：明るい帯＋白面
+        ctx.fillStyle = '#ffffff'; roundRect(24, 24, W - 48, H - 48, 24, true); lightBand(40, 60, W - 80, 90);
+      }
+
+      // 順位
+      const picks = [data.pick1, data.pick2, data.pick3].filter(Boolean);
+      const baseY = 103;
+      picks.forEach((p, i) => {
+        const y = baseY + i * 157;
+        ctx.fillStyle = theme.ink;
+
+        // 数字とテキストを分離 (数字 + スペース + テキスト)
+        const match = p.match(/^(\d+)[\s\u00A0\u3000]+(.+)$/);
+        if (match) {
+          const num = match[1];
+          const text = match[2];
+
+          // 数字 (48px)
+          ctx.font = '700 48px system-ui, "Noto Sans JP"';
+          ctx.fillText(num, 432, y);
+
+          // テキスト (32px) - 数字の幅 + 余白
+          const numWidth = ctx.measureText(num).width;
+          const gap = 40; // スペースの代わり
+          ctx.font = '700 32px system-ui, "Noto Sans JP"';
+          ctx.fillText(text, 432 + numWidth + gap, y);
+        } else {
+          // フォールバック
+          ctx.font = '700 48px system-ui, "Noto Sans JP"';
+          ctx.fillText(p, 432, y);
+        }
+      });
+
+      // フッター（ID・ニックネーム・発行時刻）
+      const issuedAt = data.issuedAt ? new Date(data.issuedAt) : new Date();
+      ctx.font = '700 16px system-ui'; ctx.fillStyle = theme.ink; labelText(trunc(data.nickname || '—', 18), 400, H - 20, theme.ink); labelText(data.answerId, 500, H - 20, theme.ink); labelText(formatTs(issuedAt), 650, H - 20, theme.ink);
+
+      // DLリンクとクリップボード
+      const blob = await new Promise(res => canvas.toBlob(res, 'image/png', 0.95));
+      // 画像保存ボタン削除に伴い、DLリンク処理も削除
+      $('#copyBtn').onclick = async () => { try { const item = new ClipboardItem({ 'image/png': blob }); await navigator.clipboard.write([item]); $('#status').textContent = '画像をコピーしました。'; } catch (e) { $('#status').textContent = 'コピーに失敗しました（ブラウザ制限の可能性）。'; } };
+    }
+
+    function genAnswerId() { return 'Q' + Date.now().toString(36).toUpperCase(); }
+
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwIuZ2BgBdl57xWPEbBYLrSpIK54eNqStnx__Xv9GcXs85TrE569XxecovFFcf5MH1A/exec";
+
+    async function onSubmit() {
+      const data = {
+        nickname: $('#nickname').value.trim(),
+        pick1: $('#pick1').value.trim(),
+        pick2: $('#pick2').value.trim(),
+        pick3: $('#pick3').value.trim(),
+        answerId: genAnswerId(),
+        issuedAt: Date.now()
+      };
+      if (!data.pick1 || !data.pick2 || !data.pick3) {
+        $('#status').textContent = 'レース名と1〜3位は必須です。'; return;
+      }
+      // 画像発行
+      await drawTicket(data);
+
+      // ★ 回答をGASへ送信（集計用）
+      try {
+        await fetch(GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            ts: data.issuedAt,
+            nickname: data.nickname,
+            pick1: data.pick1,
+            pick2: data.pick2,
+            pick3: data.pick3,
+            answerId: data.answerId
+          })
+        });
+        $('#status').textContent = '馬券発行＆投票内容を記録しました。';
+      } catch (e) {
+        $('#status').textContent = '馬券発行＆投票内容を記録しました。';
+      }
+    }
+
+    $('#submitBtn').addEventListener('click', onSubmit);
+
+    // 第2問へ遷移
+    $('#nextBtn').addEventListener('click', () => {
+      if (confirm('第3問へ移動しますか？')) {
+        window.location.href = 'https://hara7610s.github.io/q3/';
+      }
+    });
+
+    // 初期プレビュー
+    (async () => {
+      await ensureBase();
+    })();
+  </script>
+</body>
+
+</html>
