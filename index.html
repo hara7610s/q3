@@ -321,9 +321,6 @@
       <canvas id="ticket" width="850" height="530" aria-label="馬券"></canvas>
     </div>
 
-    <div style="text-align: right; margin-bottom: 40px;">
-      <button id="nextBtn" class="btn accent">第3問はこちら</button>
-    </div>
   </div>
 
   <script>
@@ -487,13 +484,6 @@
     }
 
     $('#submitBtn').addEventListener('click', onSubmit);
-
-    // 第2問へ遷移
-    $('#nextBtn').addEventListener('click', () => {
-      if (confirm('第3問へ移動しますか？')) {
-        window.location.href = 'https://hara7610s.github.io/q3/';
-      }
-    });
 
     // 初期プレビュー
     (async () => {
